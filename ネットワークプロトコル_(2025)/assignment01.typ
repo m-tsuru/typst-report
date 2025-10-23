@@ -185,7 +185,7 @@ L2TP (Layer 2 Tunneling Protocol) VPN は、OSI モデルのデータリンク�
 
 ==== TLS/SSL VPN
 
-TLS/SSL (Transport Layer Security / Secure Sockets Layer) VPN は、OSI モデルのトランスポート層で動作する VPN 技術である。TLS/SSL VPN は、Web ブラウザを使用してアクセスできるため、クライアントソフトウェアのインストールが不要であり、利便性が高い。TLS/SSL VPN は、リモートアクセス VPN に広く利用されている@cloudflare-ipsec。
+TLS/SSL (Transport Layer Security / Secure Sockets Layer) VPN は、OSI モデルのトランスポート層で動作する VPN 技術である。Web ブラウザを使用してアクセスできるため、クライアントソフトウェアのインストールが不要であり、利便性が高い。@cloudflare-ipsec。
 
 === ソフトウェア
 
@@ -195,6 +195,6 @@ OpenVPN は、OpenVPN Technologies, Inc. によって開発されているGNU �
 
 ==== SoftEther VPN
 
-SoftEther VPN は、筑波大学で登大遊らが開発したオープンソースの VPN ソフトウェアであり、OSI モデルのトランスポート層で動作する@softether。SoftEther VPN は、多くの VPN プロトコル (L2TP/IPSec、OpenVPN、SSTP など) をサポートしており、高い互換性を持っている。SoftEther VPN は、NAT トラバーサル機能を備えており、ファイアウォールや NAT 環境でも容易に接続できる。
+SoftEther VPN は、筑波大学で登大遊らが開発したオープンソースの VPN ソフトウェアであり、OSI モデルのトランスポート層で動作する@softether。多くの VPN プロトコル (L2TP/IPSec、OpenVPN、SSTP など) をサポートしており、高い互換性を持っている。NAT トラバーサル機能を備えており、ファイアウォールや NAT 環境でも容易に接続できる。
 
 #bibliography("refs.yml", full: true)

@@ -52,9 +52,19 @@ jobs:
           if-no-files-found: warn
 
       - name: Release compiled PDFs
-        if: github.event_name == 'push'
-        uses: softprops/action-gh-release@v1.24.0
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@6da8fa9354ddfdc4aeace5fc48d7f679b5214090 # v2.4.1
         with:
-          files: '**/*.pdf'
+          # 'latest' という名前のタグを常に上書きしてリリースを作成
+          tag_name: latest
+          name: "Latest Compiled PDFs"
+          body: "Automated build of compiled PDF documents."
+          # コンパイルされたPDFファイルをすべてアップロード
+          files: "**/*.pdf"
+          # ドラフトではなく、即時リリースする
+          draft: false
+          # プレリリースとしてマークする
+          prerelease: true
         env:
+          # リリースを作成するために GITHUB_TOKEN が必要
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
