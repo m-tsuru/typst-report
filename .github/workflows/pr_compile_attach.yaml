@@ -9,6 +9,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
+        with:
+          fetch-depth: 0  # 変更を比較するために履歴全体を取得
 
       - name: Install fonts
         run: |
@@ -20,7 +22,24 @@ jobs:
 
       - name: Compile Typst files
         run: |
-          typst compile "**/*.typ"
+          # 変更されたTypstファイルを取得
+          CHANGED_FILES=$(git diff --name-only --diff-filter=ACMR ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | grep '\.typ$' || true)
+
+          if [ -z "$CHANGED_FILES" ]; then
+            echo "No Typst files changed in this PR"
+            exit 0
+          fi
+
+          echo "Changed Typst files:"
+          echo "$CHANGED_FILES"
+
+          # 各ファイルをコンパイル
+          while IFS= read -r file; do
+            if [ -f "$file" ]; then
+              echo "Compiling $file"
+              typst compile "$file"
+            fi
+          done <<< "$CHANGED_FILES"
 
       - name: Attach PDFs to PR
         if: github.event_name == 'pull_request'
