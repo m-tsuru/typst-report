@@ -23,7 +23,7 @@ jobs:
       - name: Compile Typst files
         run: |
           # 変更されたTypstファイルを取得
-          CHANGED_FILES=$(git diff --name-only --diff-filter=ACMR ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | grep '\.typ' || true)
+          CHANGED_FILES=$(git diff --name-only --diff-filter=ACMR ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | grep '\.typ$' || true)
 
           if [ -z "$CHANGED_FILES" ]; then
             echo "No Typst files changed in this PR"
@@ -34,16 +34,17 @@ jobs:
           echo "$CHANGED_FILES"
 
           # 各ファイルをコンパイル
-          while IFS= read -r file; do
+          echo "$CHANGED_FILES" | while IFS= read -r file; do
             if [ -f "$file" ]; then
               echo "Compiling $file"
               typst compile "$file"
             fi
-          done <<< "$CHANGED_FILES"
+          done
 
       - name: Attach PDFs to PR
         if: github.event_name == 'pull_request'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: results
+          name: compiled-pdfs
           path: '**/*.pdf'
+          if-no-files-found: warn
