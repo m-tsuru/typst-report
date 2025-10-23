@@ -22,29 +22,23 @@ jobs:
 
       - name: Compile Typst files
         run: |
-          # 変更されたTypstファイルを取得
-          CHANGED_FILES=$(git diff --name-only --diff-filter=ACMR ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | grep '\.typ' || true)
-
-          if [ -z "$CHANGED_FILES" ]; then
-            echo "No Typst files changed in this PR"
-            exit 0
-          fi
-
-          echo "Changed Typst files:"
-          echo "$CHANGED_FILES"
-
-          # 各ファイルをコンパイル
-          while IFS= read -r file; do
-            if [ -n "$file" ]; then
-              echo "Processing: $file"
-              if [ -f "$file" ]; then
-                echo "Compiling $file"
-                typst compile "$file" || echo "Failed to compile $file"
-              else
-                echo "File not found: $file"
-              fi
+          # 変更されたTypstファイルを取得（-z オプションでnull区切り、--no-quotesでクォートなし）
+          git diff -z --name-only --diff-filter=ACMR ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | \
+          grep -z '\.typ$' | \
+          while IFS= read -r -d '' file; do
+            echo "Processing: $file"
+            if [ -f "$file" ]; then
+              echo "Compiling $file"
+              typst compile "$file" || echo "Failed to compile $file"
+            else
+              echo "File not found: $file"
             fi
-          done <<< "$CHANGED_FILES"
+          done
+
+          # 少なくとも1つのファイルが処理されたか確認
+          if ! git diff --name-only --diff-filter=ACMR ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | grep -q '\.typ$'; then
+            echo "No Typst files changed in this PR"
+          fi
 
       - name: Attach PDFs to PR
         if: github.event_name == 'pull_request'
@@ -53,11 +47,3 @@ jobs:
           name: compiled-pdfs
           path: '**/*.pdf'
           if-no-files-found: warn
-
-      - name: Release PDFs
-        if: github.event_name == 'pull_request'
-        uses: softprops/action-gh-release@v1
-        with:
-          files: '**/*.pdf'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
