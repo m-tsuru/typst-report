@@ -34,12 +34,17 @@ jobs:
           echo "$CHANGED_FILES"
 
           # 各ファイルをコンパイル
-          echo "$CHANGED_FILES" | while IFS= read -r file; do
-            if [ -f "$file" ]; then
-              echo "Compiling $file"
-              typst compile "$file"
+          while IFS= read -r file; do
+            if [ -n "$file" ]; then
+              echo "Processing: $file"
+              if [ -f "$file" ]; then
+                echo "Compiling $file"
+                typst compile "$file" || echo "Failed to compile $file"
+              else
+                echo "File not found: $file"
+              fi
             fi
-          done
+          done <<< "$CHANGED_FILES"
 
       - name: Attach PDFs to PR
         if: github.event_name == 'pull_request'
@@ -48,3 +53,11 @@ jobs:
           name: compiled-pdfs
           path: '**/*.pdf'
           if-no-files-found: warn
+
+      - name: Release PDFs
+        if: github.event_name == 'pull_request'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: '**/*.pdf'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
