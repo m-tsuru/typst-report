@@ -47,3 +47,11 @@ jobs:
           name: compiled-pdfs
           path: '**/*.pdf'
           if-no-files-found: warn
+
+      - name: Comment on PR with artifact info
+        if: github.event_name == 'pull_request'
+        uses: peter-evans/create-or-update-comment@v4.6.0
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            📝 The Typst files changed in this PR have been compiled. You can download the compiled PDFs from the "compiled-pdfs" artifact attached to this workflow run.
