@@ -65,6 +65,6 @@
 
 == テスト
 
-knock knock. Who's there? Typst. Typst you very much! これはテストです。
+knock knock. Who's there? Typst. Typst you very much! これはテストです。こんにちは
 
 $ x = frac(1, 2) $
