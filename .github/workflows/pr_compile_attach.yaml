@@ -2,6 +2,9 @@ name: Attach Compile Artifacts
 
 on:
   pull_request:
+  push:
+    branches:
+      - main
 
 jobs:
   typst-compile-attach:
@@ -47,3 +50,11 @@ jobs:
           name: compiled-pdfs
           path: '**/*.pdf'
           if-no-files-found: warn
+
+      - name: Release compiled PDFs
+        if: github.event_name == 'push'
+        uses: softprops/action-gh-release@v1.24.0
+        with:
+          files: '**/*.pdf'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
