@@ -2,6 +2,9 @@ name: Attach Compile Artifacts
 
 on:
   pull_request:
+  push:
+    branches:
+      - main
 
 jobs:
   typst-compile-attach:
@@ -9,6 +12,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
+        with:
+          fetch-depth: 0  # 変更を比較するために履歴全体を取得
 
       - name: Install fonts
         run: |
@@ -20,15 +25,46 @@ jobs:
 
       - name: Compile Typst files
         run: |
-          typst compile "**/*.typ"
+          # 変更されたTypstファイルを取得（-z オプションでnull区切り、--no-quotesでクォートなし）
+          git diff -z --name-only --diff-filter=ACMR ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | \
+          grep -z '\.typ$' | \
+          while IFS= read -r -d '' file; do
+            echo "Processing: $file"
+            if [ -f "$file" ]; then
+              echo "Compiling $file"
+              typst compile "$file" || echo "Failed to compile $file"
+            else
+              echo "File not found: $file"
+            fi
+          done
 
-      - name: Upload compiled PDFs
-        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5 # v3.2.1
-        with:
-          name: compiled-pdfs
+          # 少なくとも1つのファイルが処理されたか確認
+          if ! git diff --name-only --diff-filter=ACMR ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | grep -q '\.typ$'; then
+            echo "No Typst files changed in this PR"
+          fi
 
       - name: Attach PDFs to PR
         if: github.event_name == 'pull_request'
-        uses: actions/upload-artifact@ff15f0306b3f739f7b6fd43fb5d26cd321bd4de5 # v3.2.1
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: compiled-pdfs
+          path: '**/*.pdf'
+          if-no-files-found: warn
+
+      - name: Release compiled PDFs
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@6da8fa9354ddfdc4aeace5fc48d7f679b5214090 # v2.4.1
+        with:
+          # 'latest' という名前のタグを常に上書きしてリリースを作成
+          tag_name: latest
+          name: "Latest Compiled PDFs"
+          body: "Automated build of compiled PDF documents."
+          # コンパイルされたPDFファイルをすべてアップロード
+          files: "**/*.pdf"
+          # ドラフトではなく、即時リリースする
+          draft: false
+          # プレリリースとしてマークする
+          prerelease: true
+        env:
+          # リリースを作成するために GITHUB_TOKEN が必要
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

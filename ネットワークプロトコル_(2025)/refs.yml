@@ -1,0 +1,72 @@
+# Web サイト
+smalldata:
+    type: Web
+    title: 小電力データ通信システム（無線LAN等） - 総務省・電波利用ポータル
+    publisher: 総務省
+    url:
+        value: https://www.tele.soumu.go.jp/j/adm/system/ml/wlan/index.htm
+        date: 2025-10-24
+
+wi-fi-certification:
+    type: Web
+    title: Wi-Fi®（MAC/PHY） | Wi-Fi Alliance® | The Global Wi-Fi Ecosystem
+    publisher: Wi-Fi Alliance
+    url:
+        value: https://www.wi-fi.org/ja/wi-fi-macphy
+        date: 2025-10-24
+
+wi-fi-evolution:
+    type: Web
+    title: The Evolution of Wi-Fi Technology and Standards | IEEE Standards
+    publisher: IEEE
+    url:
+        value: https://standards.ieee.org/beyond-standards/the-evolution-of-wi-fi-technology-and-standards/
+        date: 2025-10-24
+
+softether:
+    type: Web
+    title: SoftEther VPN とは | SoftEther VPN Project
+    publisher: SoftEther VPN Project
+    url:
+        value: https://www.softether.org/4-docs/1-manual/
+        date: 2025-10-24
+
+openvpn:
+    type: Web
+    title: OpenVPNとは | OpenVPN.JP
+    publisher: OpenVPN.JP
+    url:
+        value: https://www.openvpn.jp/introduction/
+        date: 2025-10-24
+
+cloudflare-ipsec:
+    type: Web
+    title: IPsecとは？| IPsec VPNの仕組み | Cloudflare
+    publisher: Cloudflare
+    url:
+        value: https://www.cloudflare.com/ja-jp/learning/network-layer/what-is-ipsec/
+        date: 2025-10-24
+
+docomo-ipsec:
+    type: Web
+    title: IPsec（Security Architecture for Internet Protocol）とは | NTT docomo Business Watch
+    publisher: NTTドコモ
+    url:
+        value: https://www.ntt.com/bizon/glossary/e-i/ipsec.html
+        date: 2025-10-24
+
+l2tp:
+    type: Web
+    title: L2TP/概要・基本設定
+    publisher: アライドテレシス株式会社
+    url:
+        value: https://www.allied-telesis.co.jp/support/list/router/ar720/docs/overview_72L2TP_00OV.html
+        date: 2025-10-24
+
+ssl:
+    type: Web
+    title: IPsec VPNとSSL VPNの対比 | Cloudflare
+    publisher: Cloudflare
+    url:
+        value: https://www.cloudflare.com/ja-jp/learning/network-layer/ipsec-vs-ssl-vpn/
+        date: 2025-10-24
