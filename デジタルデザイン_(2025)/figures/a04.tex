@@ -1,0 +1,33 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{booktabs} % よりきれいな表にするため
+\usepackage{array}
+
+\begin{document}
+
+\begin{table}[h]
+\centering
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{c|ccc|ccc}
+\toprule
+\textbf{現在の状態} & \multicolumn{3}{c|}{\textbf{次状態 } $q^{(t+1)}$} & \multicolumn{3}{c}{\textbf{出力 } $z$} \\
+ & 00 & 01 & 10 & 00 & 01 & 10 \\
+\midrule
+$q_0$ & $q_0$ & $q_1$ & $q_5$ & 0 & 0 & 0 \\
+$q_1$ & $q_1$ & $q_2$ & $q'_0$ & 0 & 0 & 1 \\
+$q_2$ & $q_2$ & $q_3$ & $q'_1$ & 0 & 0 & 1 \\
+$q_3$ & $q_3$ & $q_4$ & $q'_2$ & 0 & 0 & 1 \\
+$q_4$ & $q_4$ & $q_5$ & $q'_3$ & 0 & 0 & 1 \\
+$q_5$ & $q_5$ & $q'_0$ & $q'_4$ & 0 & 1 & 1 \\
+$q'_0$ & $q_0$ & $q_1$ & $q_5$ & 0 & 0 & 0 \\
+$q'_1$ & $q_1$ & $q_2$ & $q'_0$ & 0 & 0 & 1 \\
+$q'_2$ & $q_2$ & $q_3$ & $q'_1$ & 0 & 0 & 1 \\
+$q'_3$ & $q_3$ & $q_4$ & $q'_2$ & 0 & 0 & 1 \\
+$q'_4$ & $q_4$ & $q_5$ & $q'_3$ & 0 & 0 & 1 \\
+\bottomrule
+\end{tabular}
+\caption{状態遷移表}
+\end{table}
+
+\end{document}
