@@ -1,0 +1,96 @@
+@startuml activityFigure01
+title 01. システムのアクティビティ図（全体）
+
+skinparam defaultTextAlignment center
+skinparam ActivityDiamondBorderColor black
+skinparam ActivityDiamondBackgroundColor white
+skinparam minClassWidth 200
+skinparam Padding 20
+skinparam Nodesep 100
+skinparam Ranksep 100
+skinparam ActivityFontSize 16
+
+|利用者|
+start
+:アプリを起動する;
+:メニューを選択する;
+
+|システム|
+if (選択されたメニューが学生情報管理) then (yes)
+    :学生情報の一覧表示;
+
+    |利用者|
+    :学生情報を選択する;
+
+    |システム|
+    :学生情報と成績一覧を表示する;
+
+    |利用者|
+    if (学生の名前を編集したい) then (yes)
+        :新しい名前を入力する;
+
+        |システム|
+        :学生の名前を更新する;
+    endif
+
+    if (成績を追加・編集したい) then (yes)
+        :成績の追加・編集・削除アクティビティを実行する (02);
+    endif
+
+elseif (選択されたメニューが成績情報管理) then (yes)
+    |利用者|
+    :学生の ID を入力する;
+
+    |システム|
+    if (ID が 一致する学生が存在する) then (yes)
+        :学生情報と成績一覧を表示する;
+
+        |利用者|
+        if (成績を追加・編集したい) then (yes)
+            :成績の追加・編集・削除アクティビティを実行する (02);
+        endif
+    else (no)
+        :エラーメッセージを表示する;
+    endif
+endif
+
+stop
+@enduml
+
+@startuml modifyGradeFigure01
+title 02. 成績の追加・編集・削除アクティビティ
+
+|利用者|
+start
+
+repeat
+    if (成績を作成したい) then (yes)
+        |利用者|
+        :フローティングアクションボタンを押下する;
+        :成績を入力する;
+
+        |システム|
+        :成績情報を更新する;
+
+    elseif (成績を編集したい) then (yes)
+        |利用者|
+        :変更したい成績を選択する;
+        :成績を編集する;
+
+        |システム|
+        :成績情報を更新する;
+
+    elseif (成績を削除したい) then (yes)
+        |利用者|
+        :削除したい成績を選択する;
+        :削除ボタンを押下する;
+
+        |システム|
+        :成績情報を更新する;
+    endif
+
+repeat while (さらに成績を追加・編集・削除したい) is (yes)
+->no;
+
+stop
+@enduml

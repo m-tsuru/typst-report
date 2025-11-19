@@ -1,0 +1,99 @@
+@startuml
+
+!theme plain
+
+enum AccountType {
+    ORDINARY("普通")
+    CURRENT("当座")
+    SAVINGS("貯蓄")
+    TIME_DEPOSIT("定期")
+    CORPORATE("法人")
+}
+
+enum TransactionType {
+    DEPOSIT("預入")
+    WITHDRAWAL("引出")
+    TRANSFER("振込")
+    PAYMENT("払込")
+}
+
+enum BankTransferStatus {
+    PENDING("振込承認前")
+    AUTHORIZED("振込承認済")
+    PROCESSING("振込処理中")
+    COMPLETED("振込完了")
+    CANCELED("振込取消")
+    FAILED("振込失敗")
+}
+
+class BankAccount {
+    -accountBranchNumber: int
+    -accountNumber: int
+    -accountType: AccountType
+    -accountHolderName: String
+}
+
+class Card {
+    -PIN: int
+    --
+    +validatePIN(inputPIN: int): boolean
+}
+
+class BankAccountLogs {
+    -TransactionType: TransactionType
+    -IncomingAmount: BigDecimal
+    -OutgoingAmount: BigDecimal
+    -Description: String
+    -Balance: BigDecimal
+    -CreateAt: Date
+    -UpdateAt: Date
+}
+
+class BankTransferDeposit {
+    '振込入金
+    - SenderInstitutionCode: String
+    - SenderBranchCode: String
+    - SenderAccountType: AccountType
+    - SenderAccountNumber: String
+    - Amount: BigDecimal
+    - Description: String
+    - Status: BankTransferStatus
+    - CreateAt: Date
+    - UpdateAt: Date
+}
+
+class BankTransferRemittance {
+    '振込送金
+    - ReceivingInstitutionCode: String
+    - ReceivingBranchCode: String
+    - ReceivingAccountType: AccountType
+    - ReceivingAccountNumber: String
+    - Amount: BigDecimal
+    - Description: String
+    - Status: BankTransferStatus
+    - CreateAt: Date
+    - UpdateAt: Date
+}
+
+class PaymentSlip {
+    - ReceivingAccount: BankAccount
+    - Sender: String
+    - Amount: BigDecimal
+    - Description: String
+    - CreateAt: Date
+    - UpdateAt: Date
+}
+
+BankAccount --> AccountType: uses
+BankAccountLogs --> TransactionType: uses
+BankTransferDeposit --> BankTransferStatus: uses
+BankTransferRemittance --> BankTransferStatus: uses
+
+BankAccount "1" o-- "0..1" Card
+BankAccount "1" o-- "0..*" BankAccountLogs
+
+BankAccountLogs "1" o-- "0..*" BankTransferDeposit
+BankAccountLogs "1" o-- "0..*" BankTransferRemittance
+BankAccountLogs "1" o-- "0..*" PaymentSlip
+
+@enduml

@@ -1,0 +1,98 @@
+@startuml
+
+title Class Overview
+
+!theme plain
+skinparam classAttributeIconSize 0
+
+' Enumクラス
+enum GradePoint {
+  A("秀", 4)
+  B("優", 3)
+  C("良", 2)
+  D("可", 1)
+  E("不可", 0)
+  F("欠不", -1)
+  --
+  -gradeJ: String
+  -gradePoint: int
+  --
+  +getGradeText(): String
+  +getGradePoint(): int
+}
+
+' エンティティクラス
+class Student {
+  +studentId: String
+  +studentName: String
+  +lectureGrades: List<LectureGrade>
+  --
+  +Student(studentId: String, studentName: String, lectureGrades: List<LectureGrade>)
+}
+
+class LectureGrade {
+  +lectureId: String
+  +lectureName: String
+  +GradePoint: GradePoint
+  +scorer: String
+  --
+  +LectureGrade(lectureId: String, lectureName: String, GradePoint: GradePoint, scorer: String)
+}
+
+' ビジネスロジッククラス
+class StudentInfo {
+  -{static} stuInfo: StudentInfo
+  -stuList: ArrayList<Student>
+  --
+  -StudentInfo()
+  +{static} getInstance(): StudentInfo
+  +addStudent(_id: String, _name: String): int
+  +updateStudentName(studentId: String, newName: String): int
+  +deleteStudent(studentId: String): int
+  +getStudentById(studentId: String): Student
+  +getStudentListForAdapter(): List<Map<String, String>>
+  +addLectureGrade(studentId: String, lectureId: String, lectureName: String, gradePoint: GradePoint, scorer: String): int
+  +updateLectureGrade(studentId: String, lectureId: String, lectureName: String, gradePoint: GradePoint, scorer: String): int
+  +deleteLectureGrade(studentId: String, lectureId: String): int
+  +getLectureGradesForDisplay(studentId: String): List<Map<String, String>>
+}
+
+' Activityクラス
+class MainActivity {
+  #onCreate(savedInstanceState: Bundle): void
+}
+
+class StudentListManagement {
+  -studentInfo: StudentInfo
+  -studentListAdapter: SimpleAdapter
+  --
+  #onCreate(savedInstanceState: Bundle): void
+  -updateStudentList(): void
+  -showAddStudentDialog(): void
+  -showAddStudentDialog(studentId: String, studentName: String): void
+}
+
+class StudentInfoManagement {
+  -stuInfo: StudentInfo
+  -tvStuInfo: TextView
+  -currentStudentId: String
+  --
+  #onCreate(savedInstanceState: Bundle): void
+  -showAddLectureDialog(): void
+  -showEditLectureDialog(lectureId: String, lectureName: String, gradePoint: GradePoint, scorer: String): void
+  -showDeleteLectureDialog(lectureId: String, lectureName: String): void
+}
+
+' 関係性の定義
+Student "1" *-- "0..*" LectureGrade : contains
+LectureGrade --> GradePoint : uses
+
+StudentInfo "1" o-- "0..*" Student : manages
+StudentInfo ..> LectureGrade : creates
+
+StudentListManagement --> StudentInfo : uses
+StudentInfoManagement --> StudentInfo : uses
+
+MainActivity ..> StudentListManagement : starts
+
+@enduml
